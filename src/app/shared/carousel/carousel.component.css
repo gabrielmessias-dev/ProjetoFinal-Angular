@@ -1,0 +1,13 @@
+/* src/app/shared/carousel/carousel.component.css */
+
+.carousel-item img {
+  height: 31rem;
+  object-fit: cover;
+  width: 100%;
+}
+
+@media (max-width: 768px) { 
+  .carousel-item img {
+    height: 18rem
+  }
+}

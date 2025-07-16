@@ -1,1 +1,61 @@
-<p>carousel works!</p>
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button> </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <a routerLink="/preparo">
+        <img src="images/carousel-preparo.png" class="d-block w-100" alt="Preparo de Exames">
+      </a>
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Prepare-se para o Seu Exame</h5>
+        <p>Informações detalhadas para garantir os melhores resultados.</p>
+        <a routerLink="/preparo" class="btn btn-primary mt-2">Saiba Mais</a>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <a routerLink="/mitos">
+        <img src="images/carousel-mitos.png" class="d-block w-100" alt="Mitos e Verdades">
+      </a>
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Radiologia sem Mistérios</h5>
+        <p>Desvende mitos e descubra a verdade sobre os exames.</p>
+        <a routerLink="/mitos" class="btn btn-primary mt-2">Confira</a>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <a routerLink="/login">
+        <img src="images/carousel-login.png" class="d-block w-100" alt="Agende seu Exame">
+      </a>
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Agendamento Online</h5>
+        <p>Marque seus exames de forma prática e segura.</p>
+        <a routerLink="/login" class="btn btn-success mt-2">Agende Agora</a>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <a routerLink="/info">
+        <img src="images/carousel-sobre.png" class="d-block w-100" alt="Sobre DiagnoTec X">
+      </a>
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Conheça a DiagnoTec X</h5>
+        <p>Inovação e cuidado em diagnóstico ao seu alcance.</p>
+        <a routerLink="/info" class="btn btn-info mt-2">Saiba Mais</a>
+      </div>
+    </div>
+
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>

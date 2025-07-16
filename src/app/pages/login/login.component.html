@@ -1,1 +1,42 @@
-<p>login works!</p>
+<app-navbar />
+
+<main class="login-container">
+  <div class="card login-card">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Área de Login do Paciente</h2>
+
+      <form (ngSubmit)="onLogin()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Usuário:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            required
+          >
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Senha:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+          >
+        </div>
+
+        <div *ngIf="loginError" class="alert alert-danger text-center" role="alert">
+          Usuário ou senha inválidos.
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<app-footer />

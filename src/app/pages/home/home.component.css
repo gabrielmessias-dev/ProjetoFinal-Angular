@@ -1,0 +1,18 @@
+.home-banner-area {
+  width: 100%;
+  overflow: hidden;
+}
+
+.home-banner-area img {
+  width: 100%;
+  height: auto;
+  max-height: 28rem; 
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) { 
+  .home-banner-area img {
+    max-height: 15.5rem; 
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "paciente1",
+      "password": "123456",
+      "name": "Silvia Maria",
+      "email": "maria.silvia@email.com"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "password": "123456",
+      "name": "Gabriel Messias",
+      "email": "gabriel.messias@email.com"
+    }
+  ],
+  "exams": [
+    {
+      "id": "exam001",
+      "patientId": 1,
+      "examType": "Ressonância Magnética de Crânio",
+      "date": "2024-03-10",
+      "time": "14:30",
+      "status": "Concluído",
+      "resultLink": "/docs/result_rm_cranio.pdf"
+    },
+    {
+      "id": "exam002",
+      "patientId": 1,
+      "examType": "Tomografia Computadorizada de Tórax",
+      "date": "2023-11-25",
+      "time": "10:00",
+      "status": "Concluído",
+      "resultLink": "/docs/result_tc_torax.pdf"
+    },
+    {
+      "id": "exam003",
+      "patientId": 2,
+      "examType": "Raio X Abdominal",
+      "date": "2024-04-01",
+      "time": "09:00",
+      "status": "Agendado",
+      "resultLink": null
+    }
+  ]
+}
