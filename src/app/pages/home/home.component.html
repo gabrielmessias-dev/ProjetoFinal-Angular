@@ -1,22 +1,17 @@
-<header class="home-banner-area">
-  <img src="images/banner.png" alt="Banner DiagnoTec X" class="img-fluid banner-img">
-</header>
-
-<nav class="home-navbar-area">
-  <app-navbar />
-</nav>
+<app-navbar></app-navbar>
 
 <main class="home-main-content">
-  <section class="carousel-section">
-    <app-carousel />
+  <section class="carousel-section mt-3"> <app-carousel></app-carousel>
   </section>
 
-  <section class="home-intro-section">
-    <h2>Bem-vindo à DiagnoTec X</h2>
-    <p>Sua saúde digital, nosso cuidado humano. Explore nossos serviços e agende seus exames com facilidade.</p>
+  <section class="home-intro-section container py-5">
+    <h2 class="text-center mb-4">Bem-vindo(a) à DiagnoTec X</h2>
+    <p class="text-center lead">Sua saúde começa aqui, com diagnósticos de imagem precisos e o cuidado que você merece. Agende seus exames com facilidade e acesse seu histórico com segurança.</p>
+    <div class="text-center mt-4">
+      <a routerLink="/marcacao" class="btn btn-lg btn-primary me-2">Agendar Exame Online</a>
+      <a routerLink="/info" class="btn btn-lg btn-outline-secondary">Conheça a DiagnoTec X</a>
+    </div>
   </section>
 </main>
 
-<footer class="home-footer-area">
-  <app-footer />
-</footer>
+<app-footer></app-footer>

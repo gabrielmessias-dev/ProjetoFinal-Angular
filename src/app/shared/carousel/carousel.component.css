@@ -1,13 +1,117 @@
 /* src/app/shared/carousel/carousel.component.css */
 
+.carousel-container {
+  max-width: 1200px; /* Limita a largura máxima do carrossel */
+  margin: 20px auto; /* Adiciona margem superior/inferior e centraliza horizontalmente */
+  border-radius: 8px; /* Cantos arredondados para um visual mais suave */
+  overflow: hidden; /* Garante que as bordas arredondadas funcionem */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
+}
+
+.carousel-item {
+  position: relative; /* ESSENCIAL para que o caption posicione-se corretamente dentro dele */
+}
+
 .carousel-item img {
-  height: 31rem;
-  object-fit: cover;
+  height: 31.25rem; /* ~500px - Altura em REM para responsividade */
+  object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
   width: 100%;
 }
 
-@media (max-width: 768px) { 
+.carousel-caption {
+  /* Propriedades para o OVERLAY (fundo opaco) cobrir a imagem toda */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none; /* Garante que não haja limite de largura */
+
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 8px; /* Mantém os cantos arredondados do container externo */
+
+  /* >>>>>> PROPRIEDADES CRÍTICAS PARA CENTRALIZAR O CONTEÚDO (TEXTO E BOTÃO) <<<<<< */
+  display: flex !important; /* <<<< TENTATIVA FORÇADA: Adicionei !important TEMPORARIAMENTE */
+  flex-direction: column;
+  justify-content: center; /* Centraliza verticalmente */
+  align-items: center; /* Centraliza horizontalmente */
+  text-align: center; /* Alinha o texto dentro de cada item */
+
+  color: #fff;
+  z-index: 1; /* Permanece abaixo dos botões de navegação e indicadores */
+}
+
+/* Estilos para o conteúdo dentro do caption */
+/* Adicionado padding para o conteúdo interno para dar um respiro das bordas */
+.carousel-caption h5 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  max-width: 80%; /* Limita a largura do texto para não ficar muito esticado */
+  padding: 0 15px; /* Adiciona padding interno para o texto H5 */
+}
+
+.carousel-caption p {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  max-width: 80%; /* Limita a largura do texto */
+  padding: 0 15px; /* Adiciona padding interno para o texto P */
+}
+
+.carousel-caption .btn {
+  font-size: 0.9rem;
+  padding: 8px 15px;
+}
+
+/* Estilo para os indicadores (bolinhas) */
+.carousel-indicators {
+  z-index: 3; /* Z-INDEX ALTO para as bolinhas ficarem por cima */
+  bottom: 1rem; /* Posicionamento padrão, pode ser ajustado se precisar de mais espaço */
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: #fff;
+  border: 1px solid #007bff;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px;
+}
+
+.carousel-indicators .active {
+  background-color: #007bff;
+}
+
+/* Z-INDEX para os botões de controle (setas) */
+.carousel-control-prev,
+.carousel-control-next {
+  z-index: 2; /* Z-INDEX PARA AS SETAS: Acima do caption, mas abaixo dos indicadores se necessário */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 10px;
+}
+
+/* Media Queries para responsividade da altura das imagens */
+@media (max-width: 768px) {
   .carousel-item img {
-    height: 18rem
+    height: 18.75rem; /* ~300px - Altura menor em dispositivos móveis */
+  }
+  .carousel-caption {
+    padding: 10px; /* Reduzir padding em telas menores, mas o flexbox já está controlando */
+  }
+  .carousel-caption h5 {
+    font-size: 1.4rem;
+  }
+  .carousel-caption p {
+    font-size: 0.8rem;
+  }
+  .carousel-caption .btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
   }
 }

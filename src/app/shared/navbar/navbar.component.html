@@ -6,22 +6,47 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
+
         <ng-container *ngIf="!isLoggedIn">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/sobre" routerLinkActive="active">Sobre</a>
+            <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/mitos-verdades" routerLinkActive="active">Mitos e Verdades</a>
+            <a class="nav-link" routerLink="/info" routerLinkActive="active">Sobre</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/preparo-exames" routerLinkActive="active">Preparo de Exames</a>
+            <a class="nav-link" routerLink="/mitos" routerLinkActive="active">Mitos e Verdades</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/preparo" routerLinkActive="active">Preparo de Exames</a>
           </li>
           <li class="nav-item">
             <a class="nav-link btn btn-outline-light ms-2" routerLink="/login">Login</a>
           </li>
         </ng-container>
 
-        <ng-container *ngIf="isLoggedIn">
+        <ng-container *ngIf="isLoggedIn && !isOnProtectedArea">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/info" routerLinkActive="active">Sobre</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/mitos" routerLinkActive="active">Mitos e Verdades</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/preparo" routerLinkActive="active">Preparo de Exames</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-light ms-2" routerLink="/area-do-paciente">Minha Área</a>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link btn btn-outline-light ms-2" (click)="logout()">Sair</button>
+          </li>
+        </ng-container>
+
+        <ng-container *ngIf="isLoggedIn && isOnProtectedArea">
           <li class="nav-item">
             <a class="nav-link" routerLink="/area-do-paciente" routerLinkActive="active">Minha Área</a>
           </li>
