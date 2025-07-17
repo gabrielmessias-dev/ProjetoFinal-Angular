@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-
-// import { loginGuard } from './guards/login.guard';
+import { loginGuard } from './core/login.guard';
 
 export const routes: Routes = [
   {
@@ -31,17 +30,17 @@ export const routes: Routes = [
 
   {
     path: 'area-do-paciente',
-    // canActivate: [loginGuard],
+    canActivate: [loginGuard],
     loadComponent: () => import('./pages/area-do-paciente/area-do-paciente.component').then(m => m.AreaDoPacienteComponent)
   },
   {
     path: 'marcacao',
-    // canActivate: [loginGuard], 
+    canActivate: [loginGuard], 
     loadComponent: () => import('./pages/marcacao/marcacao.component').then(m => m.MarcacaoComponent)
   },
   {
     path: 'historico',
-    // canActivate: [loginGuard], 
+    canActivate: [loginGuard], 
     loadComponent: () => import('./pages/historico/historico.component').then(m => m.HistoricoComponent)
   },
   {

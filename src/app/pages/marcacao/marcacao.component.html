@@ -1,1 +1,72 @@
-<p>marcacao works!</p>
+<app-navbar></app-navbar>
+
+<main class="marcacao-container">
+  <div class="container py-5">
+    <h1 class="text-center mb-5">Agendar Novo Exame</h1>
+
+    <div class="card p-4 shadow-sm">
+      <form (ngSubmit)="agendarExame()">
+        <div class="mb-3">
+          <label for="examType" class="form-label">Tipo de Exame:</label>
+          <select
+            class="form-select"
+            id="examType"
+            [(ngModel)]="novoExame.examType"
+            name="examType"
+            required
+          >
+            <option value="" disabled selected>Selecione o tipo de exame</option>
+            <option value="Ressonância Magnética de Crânio">Ressonância Magnética de Crânio</option>
+            <option value="Tomografia Computadorizada de Tórax">Tomografia Computadorizada de Tórax</option>
+            <option value="Ultrassonografia Abdominal">Ultrassonografia Abdominal</option>
+            <option value="Raio X Abdominal">Raio X Abdominal</option>
+            <option value="Mamografia">Mamografia</option>
+            <option value="Densitometria Óssea">Densitometria Óssea</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="examDate" class="form-label">Data:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="examDate"
+            [(ngModel)]="novoExame.date"
+            name="examDate"
+            required
+            [min]="minDate"
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="examTime" class="form-label">Hora:</label>
+          <select
+            class="form-select"
+            id="examTime"
+            [(ngModel)]="novoExame.time"
+            name="examTime"
+            required
+          >
+            <option value="" disabled selected>Selecione a hora</option>
+            <option *ngFor="let timeOption of availableTimes" [value]="timeOption">
+              {{ timeOption }}
+            </option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-4">Agendar Exame</button>
+      </form>
+
+      <div *ngIf="agendamentoSucesso" class="alert alert-success mt-4 text-center">
+        Exame agendado com sucesso!
+      </div>
+      <div *ngIf="agendamentoErro" class="alert alert-danger mt-4 text-center">
+        Por favor, preencha todos os campos obrigatórios.
+      </div>
+      <div *ngIf="dataPassadaErro" class="alert alert-danger mt-4 text-center">
+        Não é possível agendar exames para datas e/ou horários passados.
+      </div>
+      </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

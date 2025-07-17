@@ -36,11 +36,20 @@
     },
     {
       "id": "exam003",
-      "patientId": 2,
-      "examType": "Raio X Abdominal",
-      "date": "2024-04-01",
+      "patientId": 1,
+      "examType": "Raio X de Úmero",
+      "date": "2024-08-01",
       "time": "09:00",
       "status": "Agendado",
+      "resultLink": null
+    },
+    {
+      "id": "exam004",
+      "patientId": 1,
+      "examType": "Ultrassonografia Abdominal",
+      "date": "2024-07-10",
+      "time": "11:00",
+      "status": "Cancelado",
       "resultLink": null
     }
   ]

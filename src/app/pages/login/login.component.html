@@ -5,6 +5,9 @@
     <div class="card-body">
       <h2 class="card-title text-center mb-4">Área de Login do Paciente</h2>
 
+        <div *ngIf="authRequired" class="alert alert-warning text-center mb-3" role="alert">
+            É necessário fazer login para acessar essa área.
+        </div>
       <form (ngSubmit)="onLogin()">
         <div class="mb-3">
           <label for="username" class="form-label">Usuário:</label>

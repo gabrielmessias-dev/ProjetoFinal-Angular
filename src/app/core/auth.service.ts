@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // Importe HttpClient
-import { Observable, of } from 'rxjs'; // Importe Observable e of
-import { tap, catchError, map } from 'rxjs/operators'; // Importe operadores
-import { Router } from '@angular/router'; // Importe Router
+// src/app/core/auth.service.ts
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { tap, catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 interface User {
   id: number;
@@ -16,15 +18,26 @@ interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000'; 
-  private loggedIn = false; 
-  private currentUser: User | null = null;
+  private apiUrl = 'http://localhost:3000';
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
+  public isLoggedIn$ = this.loggedInSubject.asObservable();    
 
-  constructor(private http: HttpClient, private router: Router) {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUser = JSON.parse(storedUser);
-      this.loggedIn = true;
+  private currentUser: User | null = null;
+  private isBrowser: boolean;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.currentUser = JSON.parse(storedUser);
+        this.loggedInSubject.next(true); 
+      }
     }
   }
 
@@ -33,35 +46,50 @@ export class AuthService {
       map(users => {
         const user = users.find(u => u.username === username && u.password === password);
         if (user) {
-          this.loggedIn = true;
           this.currentUser = user;
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          if (this.isBrowser) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+          }
+          this.loggedInSubject.next(true); 
           return true;
         } else {
-          this.loggedIn = false;
           this.currentUser = null;
+          if (this.isBrowser) {
+            localStorage.removeItem('currentUser');
+          }
+          this.loggedInSubject.next(false); 
           return false;
         }
       }),
       catchError(error => {
         console.error('Erro ao tentar login:', error);
-        return of(false); 
+        this.loggedInSubject.next(false); 
+        return of(false);
       })
     );
   }
 
   logout(): void {
-    this.loggedIn = false;
     this.currentUser = null;
-    localStorage.removeItem('currentUser');
+    if (this.isBrowser) {
+      localStorage.removeItem('currentUser');
+    }
+    this.loggedInSubject.next(false);
     this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
-    return this.loggedIn;
+    if (this.isBrowser) {
+      return !!localStorage.getItem('currentUser');
+    }
+    return this.loggedInSubject.value;
   }
 
   getCurrentUser(): User | null {
+    if (this.isBrowser) {
+      const storedUser = localStorage.getItem('currentUser');
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
     return this.currentUser;
   }
 }

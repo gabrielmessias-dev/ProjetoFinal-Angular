@@ -1,0 +1,19 @@
+/* src/app/pages/area-do-paciente/area-do-paciente.component.css */
+.area-paciente-container {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  background-color: #f8f9fa;
+}
+
+.area-paciente-container .card {
+  max-width: 700px;
+  margin: auto;
+}
+
+.area-paciente-container .btn-lg {
+  padding: 15px 30px;
+  font-size: 1.25rem;
+}

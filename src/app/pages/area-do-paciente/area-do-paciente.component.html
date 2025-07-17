@@ -1,1 +1,28 @@
-<p>area-do-paciente works!</p>
+<app-navbar></app-navbar>
+
+<main class="area-paciente-container">
+  <div class="container py-5">
+    <h1 class="text-center mb-5">Área do Paciente</h1>
+
+    <div *ngIf="currentUser" class="card p-4 shadow-sm mb-5">
+      <h2 class="card-title text-center mb-4">Bem-vindo(a), {{ currentUser.name }}!</h2>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <strong>Nome de Usuário:</strong> {{ currentUser.username }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <strong>Email:</strong> {{ currentUser.email }}
+        </div>
+        </div>
+    </div>
+
+    <div class="d-grid gap-3 col-md-8 mx-auto">
+      <a routerLink="/marcacao" class="btn btn-primary btn-lg">Agendar Novo Exame</a>
+      <a routerLink="/historico" class="btn btn-secondary btn-lg">Visualizar Histórico de Exames</a>
+      <button (click)="logout()" class="btn btn-outline-danger btn-lg mt-4">Sair da Área do Paciente</button>
+    </div>
+
+  </div>
+</main>
+
+<app-footer></app-footer>
