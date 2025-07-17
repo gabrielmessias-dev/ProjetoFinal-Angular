@@ -1,0 +1,87 @@
+/* src/app/pages/historico/historico.component.css */
+
+.historico-container {
+  min-height: calc(100vh - 120px); /* Ajuste conforme a altura do seu navbar e footer */
+  background-color: #f8f9fa; /* Fundo claro para consistência */
+}
+
+/* Centraliza o conteúdo principal verticalmente e horizontalmente */
+.historico-container .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: inherit; /* Garante que o container flexível use a min-height */
+}
+
+/* Estilo para o card principal */
+.historico-container .card {
+  border-radius: 1rem;
+  border: none;
+  max-width: 1000px; /* Limita a largura da tabela em telas grandes */
+  width: 100%; /* Garante que o card ocupe a largura disponível */
+}
+
+.historico-container h1 {
+  font-weight: 700;
+}
+
+/* Estilo para a tabela */
+.historico-container table {
+  margin-bottom: 0; /* Remove margem inferior da tabela */
+}
+
+.historico-container thead th {
+  background-color: #007bff; /* Cor primária para o cabeçalho da tabela */
+  color: #fff;
+  font-weight: 600;
+  border-bottom: none; /* Remove borda inferior do cabeçalho */
+}
+
+.historico-container tbody tr:last-child {
+  border-bottom: none; /* Remove borda da última linha */
+}
+
+.historico-container tbody td {
+  padding: 1rem 0.75rem; /* Ajusta padding das células */
+}
+
+/* Estilo para os badges de status */
+.historico-container .badge {
+  font-size: 0.85rem;
+  padding: 0.5em 0.8em;
+  font-weight: 600;
+}
+
+/* Estilo dos botões de ação na tabela */
+.historico-container .btn-sm {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.3rem;
+}
+
+/* Estilo dos botões inferiores */
+.historico-container .btn-lg {
+  padding: 12px 25px;
+  font-size: 1.15rem;
+  border-radius: 0.5rem;
+}
+
+/* Estilo para o modal de cancelamento */
+.modal-content {
+  border-radius: 1rem;
+}
+.modal-header {
+  border-bottom: 1px solid #e9ecef;
+}
+.modal-title {
+  color: #007bff;
+  font-weight: 700;
+}
+.modal-footer {
+  border-top: 1px solid #e9ecef;
+  justify-content: flex-end; /* Alinha botões à direita no footer do modal */
+}
+.modal-body p strong {
+    color: #343a40; /* Destaca texto importante no modal */
+}

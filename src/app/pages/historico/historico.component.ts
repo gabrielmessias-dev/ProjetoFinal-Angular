@@ -1,7 +1,7 @@
 // src/app/pages/historico/historico.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
@@ -11,14 +11,14 @@ import { FooterComponent } from '../../shared/footer/footer.component';
 import { ExamService, Exame } from '../../core/exam.service';
 import { AuthService } from '../../core/auth.service';
 
-declare var bootstrap: any;
+declare var bootstrap: any; // Para tipagem do objeto global do Bootstrap
 
 @Component({
   selector: 'app-historico',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule, 
+    FormsModule,
     NavbarComponent,
     FooterComponent,
     RouterLink,
@@ -29,7 +29,9 @@ declare var bootstrap: any;
 })
 export class HistoricoComponent implements OnInit {
   exames: Exame[] = [];
-  loading = true; 
+  loading = true;
+
+  // Propriedades para o modal de cancelamento
   selectedExam: Exame | null = null;
   cancelReason: string = '';
   otherCancelReason: string = '';
@@ -42,16 +44,16 @@ export class HistoricoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadExams(); 
+    this.loadExams();
   }
 
   loadExams(): void {
-    this.loading = true; 
+    this.loading = true;
     this.examService.getPatientExams().pipe(
-      tap(() => this.loading = false), 
+      tap(() => this.loading = false),
       catchError(error => {
         console.error('Erro ao carregar exames:', error);
-        this.loading = false; 
+        this.loading = false;
         return of([]);
       })
     ).subscribe(data => {
@@ -89,17 +91,19 @@ export class HistoricoComponent implements OnInit {
     }
 
     if (this.selectedExam) {
-      const currentUserId = this.authService.getCurrentUser()?.id;
-      if (!currentUserId) {
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) { // currentUser.id é STRING (UID do Firebase)
         this.cancelError = 'Erro: Usuário não logado.';
         return;
       }
 
       const storedExamsStr = localStorage.getItem('agendamentosDoPaciente');
-      let allLocalStorageExams: Exame[] = storedExamsStr ? JSON.parse(storedExamsStr) : [];
+      let allLocalStorageExams: Exame[] = JSON.parse(storedExamsStr || '[]');
 
+      // <<<< CORREÇÃO FINAL AQUI: Removido Number() >>>>>
+      // Agora compara patientId (string) com currentUser.id (string)
       const examIndexInLocalStorage = allLocalStorageExams.findIndex(
-        e => e.id === this.selectedExam?.id && e.patientId === Number(currentUserId)
+        e => e.id === this.selectedExam?.id && e.patientId === currentUser.id
       );
 
       if (examIndexInLocalStorage !== -1) {
@@ -118,8 +122,9 @@ export class HistoricoComponent implements OnInit {
       const modalElement = document.getElementById('cancelExamModal');
       if (modalElement) {
         const modal = bootstrap.Modal.getInstance(modalElement);
-        modal?.hide(); 
+        modal?.hide();
       }
+
       this.loadExams();
     }
   }

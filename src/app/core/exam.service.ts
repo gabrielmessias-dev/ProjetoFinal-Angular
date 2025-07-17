@@ -1,35 +1,54 @@
+// src/app/core/exam.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of, combineLatest } from 'rxjs';
+import { Observable, of, combineLatest, from } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
+// <<<< IMPORTAÇÕES DO FIRESTORE >>>>
+import {
+  Firestore,
+  collection,
+  collectionData,
+  doc,
+  updateDoc,
+  addDoc,
+  deleteDoc,
+  query,
+  where,
+  DocumentReference,
+  CollectionReference
+} from '@angular/fire/firestore';
+// <<<< FIM IMPORTAÇÕES FIRESTORE >>>>
+
+// Interface para um exame
 export interface Exame {
-  id: string;
-  patientId: number; 
+  id: string; // Este será o ID do documento do Firestore (gerado automaticamente)
+  patientId: string; // UID do usuário Firebase
   examType: string;
   date: string;
   time: string;
   status: 'Agendado' | 'Concluído' | 'Cancelado';
   resultLink: string | null;
+  firestoreId?: string; // Propriedade opcional para armazenar o ID do documento Firestore
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExamService {
-  private apiUrl = 'http://localhost:3000';
+  private examsCollection: CollectionReference<Exame>;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private firestore: Firestore
+  ) {
+    this.examsCollection = collection(this.firestore, 'exams') as CollectionReference<Exame>;
+  }
 
   private getExamsFromApi(): Observable<Exame[]> {
-    return this.http.get<Exame[]>(`${this.apiUrl}/exams`).pipe(
-      catchError(error => {
-        console.error('Erro ao buscar exames da API:', error);
-        return of([]);
-      }),
-      map(exams => exams || [])
-    );
+    // Este método não é mais chamado diretamente na getPatientExams() com Firestore.
+    // Ele pode ser removido junto com a dependência HttpClient quando a migração for 100% testada.
+    return of([]);
   }
 
   private getExamsFromLocalStorage(): Exame[] {
@@ -38,37 +57,50 @@ export class ExamService {
       return [];
     }
     const storedExamsStr = localStorage.getItem('agendamentosDoPaciente');
-    let allLocalStorageExams: Exame[] = storedExamsStr ? JSON.parse(storedExamsStr) : [];
+    let allLocalStorageExams: Exame[] = JSON.parse(storedExamsStr || '[]');
 
     const filteredLocalStorageExams = allLocalStorageExams.filter(exam => {
-      return exam.patientId === Number(currentUser.id);
+      return exam.patientId === currentUser.id;
     });
 
     return filteredLocalStorageExams;
   }
 
-  createExam(newExamData: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink'>): Observable<Exame> {
+  createExam(newExamData: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink' | 'firestoreId'>): Observable<Exame> {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
       console.error('Erro: Tentativa de criar exame sem usuário logado.');
       return of(null as any);
     }
 
-    const examId = `local_${Date.now()}`;
-    const examToSave: Exame = {
-      ...newExamData, 
-      id: examId,
-      patientId: Number(currentUser.id), 
+    const examToSave: Omit<Exame, 'id' | 'firestoreId'> = {
+      ...newExamData,
+      patientId: currentUser.id,
       status: 'Agendado',
       resultLink: null
     };
 
-    const storedExamsStr = localStorage.getItem('agendamentosDoPaciente');
-    let allLocalStorageExams: Exame[] = storedExamsStr ? JSON.parse(storedExamsStr) : [];
-    allLocalStorageExams.push(examToSave);
-    localStorage.setItem('agendamentosDoPaciente', JSON.stringify(allLocalStorageExams));
+    return from(addDoc(this.examsCollection, examToSave)).pipe(
+      map(docRef => { // <<<< CORREÇÃO 1 AQUI: Removida a tipagem explícita 'DocumentReference<Exame>' para deixar o TypeScript inferir
+        console.log('Exame adicionado ao Firestore com ID:', docRef.id);
+        // Garante que o retorno é do tipo Exame, mesmo com docRef inferido
+        return { ...examToSave, id: docRef.id, firestoreId: docRef.id } as Exame; // <<<< Forçando o cast para Exame
+      }),
+      catchError(error => {
+        console.error('Erro ao adicionar exame ao Firestore:', error);
+        return of(null as any);
+      })
+    );
+  }
 
-    return of(examToSave);
+  updateExam(examFirestoreId: string, updates: Partial<Exame>): Observable<void> {
+    const docRef = doc(this.firestore, 'exams', examFirestoreId) as DocumentReference<Exame>;
+    return from(updateDoc(docRef, updates)).pipe(
+      catchError(error => {
+        console.error('Erro ao atualizar exame no Firestore:', error);
+        return of(null as any);
+      })
+    );
   }
 
   getPatientExams(): Observable<Exame[]> {
@@ -78,17 +110,28 @@ export class ExamService {
       return of([]);
     }
 
-    const currentUserIdNum = Number(currentUser.id);
+    const q = query(this.examsCollection, where('patientId', '==', currentUser.id));
 
-    return combineLatest([
-      this.getExamsFromApi()
-    ]).pipe(
-      map(([apiExams]) => {
-        const filteredApiExams = apiExams.filter(exam => exam.patientId === currentUserIdNum);
+    // <<<< CORREÇÃO 2 AQUI: Removido 'as string' do idField >>>>
+    return collectionData(q, { idField: 'firestoreId' }).pipe( // 'idField' deve ser uma string literal, não uma string genérica
+      map(docs => {
+        const mappedExams: Exame[] = docs.map(docData => {
+          // Garante que todos os campos da interface Exame são atribuídos e tipados corretamente
+          return {
+            id: docData['id'] || docData['firestoreId'] || '', // Pega o id original (se existiu) ou o firestoreId
+            patientId: String(docData['patientId']), // Garante que patientId é string
+            examType: docData['examType'] || '',
+            date: docData['date'] || '',
+            time: docData['time'] || '',
+            status: docData['status'] || 'Agendado',
+            resultLink: docData['resultLink'] || null,
+            firestoreId: docData['firestoreId'] || ''
+          } as Exame; // Forçar o cast para Exame é útil aqui
+        });
 
         const localStorageExams = this.getExamsFromLocalStorage();
 
-        const combinedExams = [...filteredApiExams, ...localStorageExams];
+        const combinedExams = [...mappedExams, ...localStorageExams];
 
         combinedExams.sort((a, b) => {
           const dateA = new Date(`${a.date}T${a.time}`);
@@ -97,6 +140,10 @@ export class ExamService {
         });
 
         return combinedExams;
+      }),
+      catchError(error => {
+        console.error('Erro ao buscar exames do Firestore:', error);
+        return of([]);
       })
     );
   }

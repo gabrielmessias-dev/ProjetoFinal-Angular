@@ -1,45 +1,68 @@
-<app-navbar />
+<app-navbar></app-navbar>
 
-<main class="login-container">
-  <div class="card login-card">
-    <div class="card-body">
-      <h2 class="card-title text-center mb-4">Área de Login do Paciente</h2>
+<main class="login-container d-flex align-items-center justify-content-center py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg p-4">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4 text-primary">Acesso ao Paciente</h2>
+            <p class="text-center text-muted mb-4">Entre com suas credenciais para acessar sua área exclusiva.</p>
 
-        <div *ngIf="authRequired" class="alert alert-warning text-center mb-3" role="alert">
-            É necessário fazer login para acessar essa área.
-        </div>
-      <form (ngSubmit)="onLogin()">
-        <div class="mb-3">
-          <label for="username" class="form-label">Usuário:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="username"
-            [(ngModel)]="username"
-            name="username"
-            required
-          >
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Senha:</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            [(ngModel)]="password"
-            name="password"
-            required
-          >
-        </div>
+            <form (ngSubmit)="login()" #loginForm="ngForm">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email:</label> <input
+                  type="email" class="form-control"
+                  id="email" name="email" [(ngModel)]="email" required
+                  email
+                  #emailField="ngModel"
+                  [class.is-invalid]="emailField.invalid && emailField.touched"
+                >
+                <div *ngIf="emailField.invalid && emailField.touched" class="invalid-feedback">
+                  <div *ngIf="emailField.errors?.['required']">Email é obrigatório.</div>
+                  <div *ngIf="emailField.errors?.['email']">Email inválido.</div>
+                </div>
+              </div>
 
-        <div *ngIf="loginError" class="alert alert-danger text-center" role="alert">
-          Usuário ou senha inválidos.
-        </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Senha:</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="password"
+                  required
+                  minlength="6"
+                  #passwordField="ngModel"
+                  [class.is-invalid]="passwordField.invalid && passwordField.touched"
+                >
+                <div *ngIf="passwordField.invalid && passwordField.touched" class="invalid-feedback">
+                  <div *ngIf="passwordField.errors?.['required']">Senha é obrigatória.</div>
+                  <div *ngIf="passwordField.errors?.['minlength']">A senha deve ter no mínimo 6 caracteres.</div>
+                </div>
+              </div>
 
-        <button type="submit" class="btn btn-primary w-100">Entrar</button>
-      </form>
+              <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+                {{ errorMessage }}
+              </div>
+
+              <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg" [disabled]="loginForm.invalid">Entrar</button>
+              </div>
+
+              <p class="text-center mt-3 text-muted" style="font-size: 0.85rem;">
+                Ao clicar em "Entrar", você concorda com o uso de seus dados para fins de acesso e gestão em nossa plataforma, conforme nossa Política de Privacidade.
+              </p>
+              <p class="text-center mt-2 text-muted" style="font-size: 0.85rem;">
+                Não possui cadastro? Por favor, entre em contato com nossa central de atendimento para criar seu acesso.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
 
-<app-footer />
+<app-footer></app-footer>

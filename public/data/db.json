@@ -1,24 +1,8 @@
 {
-  "users": [
-    {
-      "id": 1,
-      "username": "paciente1",
-      "password": "123456",
-      "name": "Silvia Maria",
-      "email": "maria.silvia@email.com"
-    },
-    {
-      "id": 2,
-      "username": "admin",
-      "password": "123456",
-      "name": "Gabriel Messias",
-      "email": "gabriel.messias@email.com"
-    }
-  ],
   "exams": [
     {
       "id": "exam001",
-      "patientId": 1,
+      "patientId": "1",
       "examType": "Ressonância Magnética de Crânio",
       "date": "2024-03-10",
       "time": "14:30",
@@ -27,7 +11,7 @@
     },
     {
       "id": "exam002",
-      "patientId": 1,
+      "patientId": "1",
       "examType": "Tomografia Computadorizada de Tórax",
       "date": "2023-11-25",
       "time": "10:00",
@@ -36,8 +20,8 @@
     },
     {
       "id": "exam003",
-      "patientId": 1,
-      "examType": "Raio X de Úmero",
+      "patientId": "1",
+      "examType": "Raio X de Tórax",
       "date": "2024-08-01",
       "time": "09:00",
       "status": "Agendado",
@@ -45,7 +29,7 @@
     },
     {
       "id": "exam004",
-      "patientId": 1,
+      "patientId": "1",
       "examType": "Ultrassonografia Abdominal",
       "date": "2024-07-10",
       "time": "11:00",

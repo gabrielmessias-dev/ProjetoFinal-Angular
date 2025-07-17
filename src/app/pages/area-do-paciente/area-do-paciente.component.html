@@ -1,22 +1,27 @@
 <app-navbar></app-navbar>
 
-<main class="area-paciente-container">
-  <div class="container py-5">
-    <h1 class="text-center mb-5">Área do Paciente</h1>
+<main class="area-paciente-main d-flex align-items-center justify-content-center py-5">
+  <div class="container">
+    <h1 class="text-center mb-5 mt-5 display-4 text-primary">Bem-vindo(a) à Área do Paciente!</h1>
 
-    <div *ngIf="currentUser" class="card p-4 shadow-sm mb-5">
-      <h2 class="card-title text-center mb-4">Bem-vindo(a), {{ currentUser.name }}!</h2>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <strong>Nome de Usuário:</strong> {{ currentUser.username }}
-        </div>
-        <div class="col-md-6 mb-3">
-          <strong>Email:</strong> {{ currentUser.email }}
-        </div>
-        </div>
+    <div *ngIf="currentUser" class="card p-4 shadow-lg mb-5 mx-auto" style="max-width: 800px; border-radius: 1rem;">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4">Seus Dados de Acesso</h2>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <strong>Nome Completo:</strong> {{ currentUser.name }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <strong>Usuário:</strong> {{ currentUser.username }}
+          </div>
+          <div class="col-12 mb-3">
+            <strong>Email:</strong> {{ currentUser.email }}
+          </div>
+          </div>
+      </div>
     </div>
 
-    <div class="d-grid gap-3 col-md-8 mx-auto">
+    <div class="d-grid gap-3 col-md-8 mx-auto mt-5">
       <a routerLink="/marcacao" class="btn btn-primary btn-lg">Agendar Novo Exame</a>
       <a routerLink="/historico" class="btn btn-secondary btn-lg">Visualizar Histórico de Exames</a>
       <button (click)="logout()" class="btn btn-outline-danger btn-lg mt-4">Sair da Área do Paciente</button>
