@@ -1,17 +1,13 @@
-/* src/app/pages/area-do-paciente/area-do-paciente.component.css */
-
 .area-paciente-main {
-  min-height: calc(100vh - 120px); /* Ajuste conforme a altura do seu navbar e footer */
-  background-color: #f8f9fa; /* Fundo claro, como na tela de login */
+  min-height: calc(100vh - 120px); 
+  background-color: #f8f9fa; 
 }
 
-/* Centraliza o conteúdo principal verticalmente na tela */
 .area-paciente-main.d-flex {
   align-items: center;
   justify-content: center;
 }
 
-/* Estilo para o card de dados do paciente */
 .area-paciente-main .card {
   border-radius: 1rem;
   border: none;
@@ -22,18 +18,16 @@
 }
 
 .area-paciente-main strong {
-  color: #343a40; /* Cor mais escura para os labels */
+  color: #343a40; 
 }
 
-/* Estilo dos botões grandes */
 .area-paciente-main .btn-lg {
   padding: 15px 30px;
   font-size: 1.25rem;
   border-radius: 0.5rem;
 }
 
-/* Hover sutil para botões (ex: "Sair") */
 .area-paciente-main .btn-outline-danger:hover {
-  background-color: #dc3545; /* Vermelho do Bootstrap */
+  background-color: #dc3545; 
   color: #fff !important;
 }

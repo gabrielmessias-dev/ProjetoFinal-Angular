@@ -1,17 +1,17 @@
 // src/app/pages/historico/historico.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs'; 
+import { tap, catchError, takeUntil } from 'rxjs/operators';
 
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { ExamService, Exame } from '../../core/exam.service';
 import { AuthService } from '../../core/auth.service';
 
-declare var bootstrap: any; // Para tipagem do objeto global do Bootstrap
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-historico',
@@ -27,15 +27,16 @@ declare var bootstrap: any; // Para tipagem do objeto global do Bootstrap
   templateUrl: './historico.component.html',
   styleUrl: './historico.component.css'
 })
-export class HistoricoComponent implements OnInit {
-  exames: Exame[] = [];
-  loading = true;
+export class HistoricoComponent implements OnInit, OnDestroy { 
+  exames$: Observable<Exame[]> | null = null;
+  loading = true; 
 
-  // Propriedades para o modal de cancelamento
   selectedExam: Exame | null = null;
   cancelReason: string = '';
   otherCancelReason: string = '';
   cancelError: string = '';
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private examService: ExamService,
@@ -44,21 +45,19 @@ export class HistoricoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadExams();
-  }
-
-  loadExams(): void {
-    this.loading = true;
-    this.examService.getPatientExams().pipe(
+    this.exames$ = this.examService.getPatientExamsRealtime().pipe(
       tap(() => this.loading = false),
       catchError(error => {
-        console.error('Erro ao carregar exames:', error);
+        console.error('Erro ao carregar exames realtime:', error);
         this.loading = false;
         return of([]);
       })
-    ).subscribe(data => {
-      this.exames = data;
-    });
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   logout(): void {
@@ -90,42 +89,46 @@ export class HistoricoComponent implements OnInit {
       return;
     }
 
-    if (this.selectedExam) {
-      const currentUser = this.authService.getCurrentUser();
-      if (!currentUser) { // currentUser.id é STRING (UID do Firebase)
-        this.cancelError = 'Erro: Usuário não logado.';
-        return;
-      }
+    if (this.selectedExam && this.selectedExam.firestoreId) {
+      const updates: Partial<Exame> = { status: 'Cancelado' as 'Cancelado' };
 
-      const storedExamsStr = localStorage.getItem('agendamentosDoPaciente');
-      let allLocalStorageExams: Exame[] = JSON.parse(storedExamsStr || '[]');
+      this.examService.updateExam(this.selectedExam.firestoreId, updates).subscribe({
+        next: () => {
+          console.log(`Exame ${this.selectedExam?.id} cancelado no Firestore.`);
 
-      // <<<< CORREÇÃO FINAL AQUI: Removido Number() >>>>>
-      // Agora compara patientId (string) com currentUser.id (string)
-      const examIndexInLocalStorage = allLocalStorageExams.findIndex(
-        e => e.id === this.selectedExam?.id && e.patientId === currentUser.id
-      );
+          const modalElement = document.getElementById('cancelExamModal');
+          if (modalElement) {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal?.hide();
+          }
+          // loadExams() REMOVIDO AQUI
+        },
+        error: (err) => {
+          console.error('Erro ao cancelar exame no Firestore:', err);
+          this.cancelError = 'Falha ao cancelar exame. Verifique suas permissões ou conexão.';
+        }
+      });
+    } else {
+      this.cancelError = 'Não é possível cancelar este exame. Ele não é um agendamento válido no sistema online.';
+      console.warn(`Tentativa de cancelar exame sem firestoreId. Exame:`, this.selectedExam);
+    }
+  }
 
-      if (examIndexInLocalStorage !== -1) {
-        allLocalStorageExams[examIndexInLocalStorage].status = 'Cancelado';
-        localStorage.setItem('agendamentosDoPaciente', JSON.stringify(allLocalStorageExams));
-        console.log(`Exame ${this.selectedExam.id} cancelado no localStorage.`);
+  deleteExam(exam: Exame): void {
+    if (confirm(`Tem certeza que deseja deletar o exame de ${exam.examType} agendado para ${exam.date}?`)) {
+      if (exam.firestoreId) {
+        this.examService.deleteExam(exam.firestoreId).subscribe({
+          next: () => {
+            console.log(`Exame ${exam.id} deletado do Firestore.`);
+          },
+          error: (err) => {
+            console.error('Erro ao deletar exame:', err);
+            alert('Falha ao deletar exame. Verifique suas permissões ou conexão.');
+          }
+        });
       } else {
-        console.warn(`Exame ${this.selectedExam.id} é da API. O cancelamento não será persistente após recarregar a página.`);
+        alert('Não foi possível deletar este exame. ID do Firestore ausente.');
       }
-
-      const examInDisplayList = this.exames.find(e => e.id === this.selectedExam?.id);
-      if (examInDisplayList) {
-        examInDisplayList.status = 'Cancelado';
-      }
-
-      const modalElement = document.getElementById('cancelExamModal');
-      if (modalElement) {
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        modal?.hide();
-      }
-
-      this.loadExams();
     }
   }
 }

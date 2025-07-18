@@ -1,13 +1,11 @@
-/* src/app/pages/login/login.component.css */
-
 .login-container {
-  min-height: calc(100vh - 120px); /* Ajuste conforme a altura do seu navbar e footer */
-  background-color: #f8f9fa; /* Um fundo claro para destacar o card */
+  min-height: calc(100vh - 120px);
+  background-color: #f8f9fa;
 }
 
 .card {
-  border-radius: 1rem; /* Bordas arredondadas para um visual mais suave */
-  border: none; /* Remove a borda padrão do card */
+  border-radius: 1rem; 
+  border: none;
 }
 
 .card-title {
@@ -19,11 +17,11 @@
 }
 
 .btn-primary {
-  background-color: #007bff; /* Cor primária do Bootstrap */
+  background-color: #007bff;
   border-color: #007bff;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3; /* Tom mais escuro no hover */
+  background-color: #0056b3;
   border-color: #0056b3;
 }

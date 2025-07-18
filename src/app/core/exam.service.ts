@@ -1,14 +1,13 @@
 // src/app/core/exam.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, of, combineLatest, from } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, of, from } from 'rxjs'; 
+import { map, catchError, tap, switchMap } from 'rxjs/operators'; 
 import { AuthService } from './auth.service';
 
-// <<<< IMPORTAÇÕES DO FIRESTORE >>>>
 import {
   Firestore,
   collection,
-  collectionData,
+  collectionData, 
   doc,
   updateDoc,
   addDoc,
@@ -16,20 +15,20 @@ import {
   query,
   where,
   DocumentReference,
-  CollectionReference
-} from '@angular/fire/firestore';
-// <<<< FIM IMPORTAÇÕES FIRESTORE >>>>
+  CollectionReference,
+  orderBy, 
 
-// Interface para um exame
+} from '@angular/fire/firestore';
+
 export interface Exame {
-  id: string; // Este será o ID do documento do Firestore (gerado automaticamente)
-  patientId: string; // UID do usuário Firebase
+  id: string; 
+  patientId: string; 
   examType: string;
   date: string;
   time: string;
   status: 'Agendado' | 'Concluído' | 'Cancelado';
   resultLink: string | null;
-  firestoreId?: string; // Propriedade opcional para armazenar o ID do documento Firestore
+  firestoreId?: string; 
 }
 
 @Injectable({
@@ -45,49 +44,23 @@ export class ExamService {
     this.examsCollection = collection(this.firestore, 'exams') as CollectionReference<Exame>;
   }
 
-  private getExamsFromApi(): Observable<Exame[]> {
-    // Este método não é mais chamado diretamente na getPatientExams() com Firestore.
-    // Ele pode ser removido junto com a dependência HttpClient quando a migração for 100% testada.
-    return of([]);
-  }
-
-  private getExamsFromLocalStorage(): Exame[] {
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
-      return [];
-    }
-    const storedExamsStr = localStorage.getItem('agendamentosDoPaciente');
-    let allLocalStorageExams: Exame[] = JSON.parse(storedExamsStr || '[]');
-
-    const filteredLocalStorageExams = allLocalStorageExams.filter(exam => {
-      return exam.patientId === currentUser.id;
-    });
-
-    return filteredLocalStorageExams;
-  }
-
   createExam(newExamData: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink' | 'firestoreId'>): Observable<Exame> {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
-      console.error('Erro: Tentativa de criar exame sem usuário logado.');
+      console.error('ExamService.createExam: Usuário não logado.');
       return of(null as any);
     }
-
     const examToSave: Omit<Exame, 'id' | 'firestoreId'> = {
       ...newExamData,
       patientId: currentUser.id,
       status: 'Agendado',
       resultLink: null
     };
-
     return from(addDoc(this.examsCollection, examToSave)).pipe(
-      map(docRef => { // <<<< CORREÇÃO 1 AQUI: Removida a tipagem explícita 'DocumentReference<Exame>' para deixar o TypeScript inferir
-        console.log('Exame adicionado ao Firestore com ID:', docRef.id);
-        // Garante que o retorno é do tipo Exame, mesmo com docRef inferido
-        return { ...examToSave, id: docRef.id, firestoreId: docRef.id } as Exame; // <<<< Forçando o cast para Exame
-      }),
+      tap(docRef => console.log('Firestore: Exame adicionado com sucesso, ID:', docRef.id)),
+      map(docRef => ({ ...examToSave, id: docRef.id, firestoreId: docRef.id } as Exame)),
       catchError(error => {
-        console.error('Erro ao adicionar exame ao Firestore:', error);
+        console.error('Firestore: ERRO ao adicionar exame:', error);
         return of(null as any);
       })
     );
@@ -97,53 +70,64 @@ export class ExamService {
     const docRef = doc(this.firestore, 'exams', examFirestoreId) as DocumentReference<Exame>;
     return from(updateDoc(docRef, updates)).pipe(
       catchError(error => {
-        console.error('Erro ao atualizar exame no Firestore:', error);
+        console.error('Firestore: ERRO ao atualizar exame:', error);
         return of(null as any);
       })
     );
   }
 
-  getPatientExams(): Observable<Exame[]> {
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
-      console.warn('Tentativa de carregar exames sem usuário logado.');
-      return of([]);
-    }
-
-    const q = query(this.examsCollection, where('patientId', '==', currentUser.id));
-
-    // <<<< CORREÇÃO 2 AQUI: Removido 'as string' do idField >>>>
-    return collectionData(q, { idField: 'firestoreId' }).pipe( // 'idField' deve ser uma string literal, não uma string genérica
-      map(docs => {
-        const mappedExams: Exame[] = docs.map(docData => {
-          // Garante que todos os campos da interface Exame são atribuídos e tipados corretamente
-          return {
-            id: docData['id'] || docData['firestoreId'] || '', // Pega o id original (se existiu) ou o firestoreId
-            patientId: String(docData['patientId']), // Garante que patientId é string
-            examType: docData['examType'] || '',
-            date: docData['date'] || '',
-            time: docData['time'] || '',
-            status: docData['status'] || 'Agendado',
-            resultLink: docData['resultLink'] || null,
-            firestoreId: docData['firestoreId'] || ''
-          } as Exame; // Forçar o cast para Exame é útil aqui
-        });
-
-        const localStorageExams = this.getExamsFromLocalStorage();
-
-        const combinedExams = [...mappedExams, ...localStorageExams];
-
-        combinedExams.sort((a, b) => {
-          const dateA = new Date(`${a.date}T${a.time}`);
-          const dateB = new Date(`${b.date}T${b.time}`);
-          return dateA.getTime() - dateB.getTime();
-        });
-
-        return combinedExams;
-      }),
+  deleteExam(examFirestoreId: string): Observable<void> {
+    const docRef = doc(this.firestore, 'exams', examFirestoreId) as DocumentReference<Exame>;
+    return from(deleteDoc(docRef)).pipe(
       catchError(error => {
-        console.error('Erro ao buscar exames do Firestore:', error);
-        return of([]);
+        console.error('Firestore: ERRO ao deletar exame:', error);
+        return of(null as any);
+      })
+    );
+  }
+
+  getPatientExamsRealtime(): Observable<Exame[]> {
+
+    return this.authService.isLoggedIn$.pipe(
+      switchMap(isLoggedIn => {
+        if (!isLoggedIn) {
+          console.warn('Firestore: getPatientExamsRealtime chamado sem usuário logado.');
+          return of([]);
+        }
+        const currentUser = this.authService.getCurrentUser();
+        if (!currentUser) { 
+          return of([]);
+        }
+
+        console.log('Firestore: Configurando stream de exames para patientId:', currentUser.id);
+
+        const q = query(
+          this.examsCollection,
+          where('patientId', '==', currentUser.id),
+          orderBy('date', 'asc'), // Ordena por data
+          orderBy('time', 'asc')  // Depois por hora
+        );
+
+        return collectionData(q, { idField: 'firestoreId' }).pipe(
+          map(docs => {
+            const mappedExams: Exame[] = docs.map(docData => ({
+              id: docData['id'] || docData['firestoreId'] || '',
+              patientId: String(docData['patientId']),
+              examType: docData['examType'] || '',
+              date: docData['date'] || '',
+              time: docData['time'] || '',
+              status: docData['status'] || 'Agendado',
+              resultLink: docData['resultLink'] || null,
+              firestoreId: docData['firestoreId'] || ''
+            }) as Exame);
+            console.log('Firestore: Exames em tempo real recebidos e mapeados:', mappedExams);
+            return mappedExams;
+          }),
+          catchError(error => {
+            console.error('Firestore: ERRO no stream de exames:', error);
+            return of([]);
+          })
+        );
       })
     );
   }

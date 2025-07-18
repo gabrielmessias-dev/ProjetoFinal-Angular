@@ -6,64 +6,73 @@
 
     <div class="card shadow-lg p-4 mb-4">
       <div class="card-body">
-        <div *ngIf="exames.length === 0 && !loading" class="alert alert-info text-center">
-          Nenhum exame encontrado para o seu histórico. Agende seu primeiro exame!
-        </div>
-
-        <div *ngIf="loading" class="text-center my-5">
-          <div class="spinner-border text-primary" role="status">
+        <div *ngIf="loading && !exames$" class="text-center my-5"> <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Carregando...</span>
           </div>
           <p class="mt-2 text-muted">Carregando histórico de exames...</p>
         </div>
 
-        <div *ngIf="exames.length > 0">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle"> <thead>
-                <tr>
-                  <th scope="col">Tipo de Exame</th>
-                  <th scope="col">Data</th>
-                  <th scope="col">Hora</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let exame of exames">
-                  <td>{{ exame.examType }}</td>
-                  <td>{{ exame.date | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ exame.time }}</td>
-                  <td>
-                    <span class="badge rounded-pill"
-                          [class.bg-success]="exame.status === 'Concluído'"
-                          [class.bg-warning]="exame.status === 'Agendado'"
-                          [class.bg-danger]="exame.status === 'Cancelado'">
-                      {{ exame.status }}
-                    </span>
-                  </td>
-                  <td>
-                    <ng-container *ngIf="exame.status === 'Concluído'; else otherActions">
-                      <ng-container *ngIf="exame.resultLink; else noResult">
-                        <a [href]="exame.resultLink" target="_blank" class="btn btn-sm btn-outline-primary me-2">Ver Resultado</a>
-                      </ng-container>
-                      <ng-template #noResult>
-                        <span class="text-muted">Sem Resultado</span>
-                      </ng-template>
-                    </ng-container>
+        <div *ngIf="exames$ | async as exames; else showNoExams"> <div *ngIf="exames.length === 0 && !loading" class="alert alert-info text-center">
+            Nenhum exame encontrado para o seu histórico. Agende seu primeiro exame!
+          </div>
 
-                    <ng-template #otherActions>
-                      <ng-container *ngIf="exame.status === 'Agendado'">
-                        <button class="btn btn-sm btn-danger" (click)="openCancelModal(exame)">Cancelar</button>
+          <div *ngIf="exames.length > 0"> <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">Tipo de Exame</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let exame of exames"> <td>{{ exame.examType }}</td>
+                    <td>{{ exame.date | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ exame.time }}</td>
+                    <td>
+                      <span class="badge rounded-pill"
+                            [class.bg-success]="exame.status === 'Concluído'"
+                            [class.bg-warning]="exame.status === 'Agendado'"
+                            [class.bg-danger]="exame.status === 'Cancelado'">
+                        {{ exame.status }}
+                      </span>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="exame.status === 'Concluído'; else otherActions">
+                        <ng-container *ngIf="exame.resultLink; else noResult">
+                          <a [href]="exame.resultLink" target="_blank" class="btn btn-sm btn-outline-primary me-2">Ver Resultado</a>
+                        </ng-container>
+                        <ng-template #noResult>
+                          <span class="text-muted">Sem Resultado</span>
+                        </ng-template>
                       </ng-container>
-                      <ng-container *ngIf="exame.status === 'Cancelado'">
-                        <span class="text-muted">Exame Cancelado</span> </ng-container>
-                    </ng-template>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+                      <ng-template #otherActions>
+                        <ng-container *ngIf="exame.status === 'Agendado'">
+                          <button class="btn btn-sm btn-danger me-2" (click)="openCancelModal(exame)">Cancelar</button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteExam(exame)">Deletar</button>
+                        </ng-container>
+                        <ng-container *ngIf="exame.status === 'Cancelado'">
+                          <span class="text-muted me-2">Exame Cancelado</span>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteExam(exame)">Deletar</button>
+                        </ng-container>
+                      </ng-template>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+
+        <ng-template #showNoExams>
+          <div *ngIf="!loading" class="alert alert-info text-center mt-3">
+            Nenhum exame encontrado para o seu histórico. Agende seu primeiro exame!
+          </div>
+        </ng-template>
+
       </div>
     </div>
 
@@ -76,37 +85,3 @@
 </main>
 
 <app-footer></app-footer>
-
-<div class="modal fade" id="cancelExamModal" tabindex="-1" aria-labelledby="cancelExamModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-primary" id="cancelExamModalLabel">Cancelar Exame</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Você tem certeza que deseja cancelar o exame de <strong>{{ selectedExam?.examType }}</strong> agendado para <strong>{{ selectedExam?.date | date:'dd/MM/yyyy' }} às {{ selectedExam?.time }}</strong>?</p>
-        <div class="mb-3">
-          <label for="cancelReason" class="form-label">Motivo do Cancelamento:</label>
-          <select class="form-select" id="cancelReason" [(ngModel)]="cancelReason">
-            <option value="">Selecione um motivo</option>
-            <option value="Problemas de saúde">Problemas de saúde</option>
-            <option value="Conflito de agenda">Conflito de agenda</option>
-            <option value="Outro motivo">Outro motivo</option>
-          </select>
-        </div>
-        <div *ngIf="cancelReason === 'Outro motivo'" class="mb-3">
-          <label for="otherReason" class="form-label">Especifique o motivo:</label>
-          <input type="text" class="form-control" id="otherReason" [(ngModel)]="otherCancelReason">
-        </div>
-        <div *ngIf="cancelError" class="alert alert-danger mt-3">
-          {{ cancelError }}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        <button type="button" class="btn btn-danger" (click)="confirmCancel()">Confirmar Cancelamento</button>
-      </div>
-    </div>
-  </div>
-</div>

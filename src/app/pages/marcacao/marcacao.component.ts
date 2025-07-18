@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { AuthService } from '../../core/auth.service';
-import { ExamService, Exame } from '../../core/exam.service'; // Importe ExamService e Exame
+import { ExamService, Exame } from '../../core/exam.service';
 
 @Component({
   selector: 'app-marcacao',
@@ -22,8 +22,7 @@ import { ExamService, Exame } from '../../core/exam.service'; // Importe ExamSer
   styleUrl: './marcacao.component.css'
 })
 export class MarcacaoComponent implements OnInit {
-  // Objeto para armazenar os dados do novo exame do formulário
-  novoExame: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink'> = { // Tipo ajustado para o que o formulário coleta
+  novoExame: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink'> = { 
     examType: '',
     date: '',
     time: ''
@@ -50,7 +49,6 @@ export class MarcacaoComponent implements OnInit {
       console.error('Erro: Usuário não logado ao tentar acessar agendamento. Redirecionando...');
       this.router.navigate(['/login']);
     }
-    // Não precisa mais setar novoExame.patientId aqui, o service fará isso.
   }
 
   ngOnInit(): void {
@@ -59,7 +57,7 @@ export class MarcacaoComponent implements OnInit {
 
   private generateAvailableTimes(): void {
     const startHour = 9;
-    const endHour = 20; // 21:00 é o último horário, então a hora final é 20 para :30
+    const endHour = 20;
     this.availableTimes = [];
 
     for (let h = startHour; h <= endHour; h++) {
@@ -80,7 +78,6 @@ export class MarcacaoComponent implements OnInit {
       return;
     }
 
-    // Validação da data: impede agendamento para data e hora passadas
     const selectedDateTime = new Date(`${this.novoExame.date}T${this.novoExame.time}`);
     const now = new Date();
 
@@ -91,26 +88,22 @@ export class MarcacaoComponent implements OnInit {
 
     const [hours, minutes] = this.novoExame.time.split(':').map(Number);
 
-    // Validação de Horário Comercial (9:00h às 21:00h)
     if (hours < 9 || hours >= 21) {
       this.horarioInvalidoErro = true;
       return;
     }
 
-    // A validação de minutos (00/30) já é garantida pelo select no HTML.
-
-    this.examService.createExam(this.novoExame).subscribe({ // Passando novoExame para o service
+    this.examService.createExam(this.novoExame).subscribe({ 
       next: (exam) => {
         this.agendamentoSucesso = true;
         console.log('Exame agendado com sucesso e salvo no localStorage:', exam);
 
-        // Reseta o formulário
         this.novoExame = {
           examType: '',
           date: '',
           time: ''
         };
-        // Redireciona para o histórico após agendar
+        
         this.router.navigate(['/historico']);
       },
       error: (err) => {

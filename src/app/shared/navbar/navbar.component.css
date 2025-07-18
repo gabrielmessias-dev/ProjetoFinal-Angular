@@ -1,35 +1,65 @@
-.navbar-nav .nav-link:hover,
-.navbar-nav .nav-link:focus {
-  background-color: transparent !important; /* Remove o fundo */
-  color: rgba(255, 255, 255, 0.8) !important; /* Cor mais clara para o texto no hover */
-  transform: scale(1.05); /* Leve aumento no tamanho */
-  transition: all 0.2s ease-in-out; /* Transição suave */
+.navbar-brand.app-logo-text {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-/* Estilo para o link "Login" ou botão "Sair" (btn-outline-light) */
+.app-logo-text {
+  font-family: 'Roboto', sans-serif; 
+  font-size: 1.8rem; 
+  font-weight: bold;
+  letter-spacing: 0.5px; 
+  color: #ffffff; 
+  text-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.6), 
+    0 0 5px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.app-logo-text:hover {
+  letter-spacing: 0.7px;
+  color: #f8f9fa; 
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.8), 
+    0 0 8px rgba(255, 255, 255, 0.5); 
+}
+
+.navbar-brand.app-logo-text {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-nav .nav-link {
+  transition: all 0.2s ease-in-out; 
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  background-color: transparent !important; 
+  color: rgba(255, 255, 255, 0.8) !important; 
+  transform: scale(1.05); 
+}
+
 .navbar-nav .btn-outline-light.nav-link {
-  border-color: #fff; /* Mantém a borda branca */
-  color: #fff; /* Mantém a cor do texto branca */
-  transition: all 0.2s ease-in-out; /* Transição suave */
+  border-color: #fff; 
+  color: #fff; 
 }
 
 .navbar-nav .btn-outline-light.nav-link:hover,
 .navbar-nav .btn-outline-light.nav-link:focus {
-  background-color: rgba(255, 255, 255, 0.1); /* Fundo branco bem sutil (10% de opacidade) */
-  color: #fff !important; /* Mantém o texto branco (ou ajuste para uma cor sutil) */
-  transform: scale(1.05); /* Leve aumento no tamanho */
-  border-color: #fff !important; /* Mantém a borda branca */
+  background-color: rgba(255, 255, 255, 0.1); 
+  color: #fff !important; 
+  transform: scale(1.05); 
+  border-color: #fff !important; 
 }
 
-/* Ajuste para o routerLinkActive, se quiser que ele tenha um estilo diferente quando ativo */
 .navbar-nav .nav-link.active {
   font-weight: bold;
-  color: #fff; /* Cor do texto quando ativo */
-  border-bottom: 2px solid #fff; /* Uma linha inferior, por exemplo */
-  padding-bottom: 3px; /* Para não cortar a linha */
+  color: #fff; 
+  border-bottom: 2px solid #fff; 
+  padding-bottom: 3px; 
 }
 
-/* Padding para os itens do nav-link para eles não ficarem colados */
 .navbar-nav .nav-item {
-  padding: 0 10px; /* Padding horizontal para separar os itens */
+  padding: 0 10px; 
 }

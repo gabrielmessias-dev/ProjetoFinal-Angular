@@ -1,4 +1,3 @@
-// src/app/pages/login/login.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +23,7 @@ export class LoginComponent implements OnInit {
   email = '';
   password = '';
   errorMessage: string | null = null;
-  authRequired = false; // <<<< É um boolean, deve ser 'false' ou 'true'
+  authRequired = false; 
 
   constructor(
     private authService: AuthService,
@@ -38,7 +37,7 @@ export class LoginComponent implements OnInit {
         this.authRequired = true;
         this.errorMessage = 'É necessário fazer login para acessar essa área.';
       } else {
-        this.authRequired = false; // <<<< CORRIGIDO AQUI: Deve ser 'false', não 'null'
+        this.authRequired = false;
       }
     });
   }

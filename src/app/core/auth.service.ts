@@ -2,7 +2,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { Observable, of, BehaviorSubject, from } from 'rxjs'; // 'from' para Promises em Observable
+import { Observable, of, BehaviorSubject, from } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Auth, UserCredential, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
