@@ -9,15 +9,27 @@
         <h2 class="card-title text-center mb-4">Seus Dados de Acesso</h2>
         <div class="row">
           <div class="col-md-6 mb-3">
-            <strong>Nome Completo:</strong> {{ currentUser.name }}
+            <strong>Nome Completo:</strong> {{ currentUser.name }} 
           </div>
           <div class="col-md-6 mb-3">
-            <strong>Usuário:</strong> {{ currentUser.username }}
+            <strong>Usuário:</strong> {{ currentUser.email }} 
           </div>
-          <div class="col-12 mb-3">
+          <div class="col-md-6 mb-3">
             <strong>Email:</strong> {{ currentUser.email }}
           </div>
+          <div class="col-md-6 mb-3">
+            <strong>Data de Nascimento:</strong> {{ userBirthDate }}
           </div>
+          <div class="col-md-6 mb-3 d-flex align-items-center">
+            <strong>CPF:</strong>
+            <span class="ms-2" style="font-family: monospace;">
+              {{ showCpf ? userCpf : '***.***.***-**' }}
+            </span>
+            <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="toggleCpfVisibility()">
+              <i class="bi" [class.bi-eye-fill]="showCpf" [class.bi-eye-slash-fill]="!showCpf"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 

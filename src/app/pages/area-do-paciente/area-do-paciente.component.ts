@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router'; 
+import { Router, RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { AuthService } from '../../core/auth.service';
@@ -12,13 +12,16 @@ import { AuthService } from '../../core/auth.service';
     CommonModule,
     NavbarComponent,
     FooterComponent,
-    RouterLink 
+    RouterLink
   ],
   templateUrl: './area-do-paciente.component.html',
   styleUrl: './area-do-paciente.component.css'
 })
 export class AreaDoPacienteComponent implements OnInit {
-  currentUser: any; 
+  currentUser: any;
+  userCpf: string = '123.456.789-00'; 
+  userBirthDate: string = '01/01/1990'; 
+  showCpf: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -26,14 +29,23 @@ export class AreaDoPacienteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentUser = this.authService.getCurrentUser();
-    if (!this.currentUser) {
+    const userFromAuth = this.authService.getCurrentUser();
+    if (userFromAuth) {
+      this.currentUser = {
+        ...userFromAuth,
+        name: userFromAuth.name || userFromAuth.email
+      };
+    } else {
       this.router.navigate(['/login']);
     }
   }
 
+  toggleCpfVisibility(): void {
+    this.showCpf = !this.showCpf;
+  }
+
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']); 
+    this.router.navigate(['/login']);
   }
 }
