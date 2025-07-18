@@ -99,8 +99,6 @@ export class ExamService {
           return of([]);
         }
 
-        console.log('Firestore: Configurando stream de exames para patientId:', currentUser.id);
-
         const q = query(
           this.examsCollection,
           where('patientId', '==', currentUser.id),
@@ -120,7 +118,6 @@ export class ExamService {
               resultLink: docData['resultLink'] || null,
               firestoreId: docData['firestoreId'] || ''
             }) as Exame);
-            console.log('Firestore: Exames em tempo real recebidos e mapeados:', mappedExams);
             return mappedExams;
           }),
           catchError(error => {

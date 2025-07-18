@@ -94,8 +94,6 @@ export class HistoricoComponent implements OnInit, OnDestroy {
 
       this.examService.updateExam(this.selectedExam.firestoreId, updates).subscribe({
         next: () => {
-          console.log(`Exame ${this.selectedExam?.id} cancelado no Firestore.`);
-
           const modalElement = document.getElementById('cancelExamModal');
           if (modalElement) {
             const modal = bootstrap.Modal.getInstance(modalElement);
@@ -119,7 +117,6 @@ export class HistoricoComponent implements OnInit, OnDestroy {
       if (exam.firestoreId) {
         this.examService.deleteExam(exam.firestoreId).subscribe({
           next: () => {
-            console.log(`Exame ${exam.id} deletado do Firestore.`);
           },
           error: (err) => {
             console.error('Erro ao deletar exame:', err);

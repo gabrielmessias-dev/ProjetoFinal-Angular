@@ -96,7 +96,6 @@ export class MarcacaoComponent implements OnInit {
     this.examService.createExam(this.novoExame).subscribe({ 
       next: (exam) => {
         this.agendamentoSucesso = true;
-        console.log('Exame agendado com sucesso e salvo no localStorage:', exam);
 
         this.novoExame = {
           examType: '',

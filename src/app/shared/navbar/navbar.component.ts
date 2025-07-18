@@ -24,16 +24,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router
   ) {
-    console.log('NavbarComponent: Construtor iniciado.');
   }
 
   ngOnInit(): void {
-    console.log('NavbarComponent: ngOnInit iniciado. Assinando isLoggedIn$ e Router events.');
     this.authService.isLoggedIn$
       .pipe(takeUntil(this.destroy$))
       .subscribe(status => {
         this.isLoggedIn = status;
-        console.log('NavbarComponent (AuthService): isLoggedIn$ atualizado para:', this.isLoggedIn);
         this.updateNavbarVisibility();
       });
 
@@ -43,12 +40,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((event: NavigationEnd) => {
-        console.log('NavbarComponent (Router): NavigationEnd detectado. URL após redirecionamentos:', event.urlAfterRedirects);
         this.updateNavbarVisibility(event.urlAfterRedirects); 
       });
 
     this.isLoggedIn = this.authService.isLoggedIn(); 
-    console.log('NavbarComponent (AuthService): Estado inicial de isLoggedIn (direto do service):', this.isLoggedIn);
     this.updateNavbarVisibility(this.router.url);
   }
 
@@ -58,15 +53,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private updateNavbarVisibility(currentUrl: string = this.router.url): void {
-    console.log('NavbarComponent (updateNavbarVisibility): Processando URL:', currentUrl);
     this.isOnProtectedArea = currentUrl.startsWith('/area-do-paciente') ||
                              currentUrl.startsWith('/marcacao') ||
                              currentUrl.startsWith('/historico');
-
-    console.log('NavbarComponent (updateNavbarVisibility): isBrowser =', this.authService['isBrowser'], 'isLoggedIn =', this.isLoggedIn, 'URL =', currentUrl, 'isOnProtectedArea =', this.isOnProtectedArea);
-    console.log('NavbarComponent: Navbar deve estar no estado:',
-      !this.isLoggedIn ? 'NÃO LOGADO' : (this.isOnProtectedArea ? 'LOGADO E PROTEGIDO' : 'LOGADO E PÚBLICO')
-    );
   }
 
   logout(): void {
