@@ -1,4 +1,3 @@
-// src/app/pages/historico/historico.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
