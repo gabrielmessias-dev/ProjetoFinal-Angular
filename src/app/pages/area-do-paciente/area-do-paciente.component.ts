@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
@@ -10,8 +8,6 @@ import { AuthService } from '../../core/auth.service';
   standalone: true,
   imports: [
     CommonModule,
-    NavbarComponent,
-    FooterComponent,
     RouterLink
   ],
   templateUrl: './area-do-paciente.component.html',

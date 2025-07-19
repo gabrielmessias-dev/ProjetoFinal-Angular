@@ -3,9 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
 import { AuthService } from '../../core/auth.service';
 import { ExamService, Exame } from '../../core/exam.service';
 
@@ -14,9 +11,7 @@ import { ExamService, Exame } from '../../core/exam.service';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    NavbarComponent,
-    FooterComponent
+    FormsModule
   ],
   templateUrl: './marcacao.component.html',
   styleUrl: './marcacao.component.css'

@@ -2,9 +2,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
 import { CarouselComponent } from '../../shared/carousel/carousel.component';
 
 @Component({
@@ -12,8 +9,6 @@ import { CarouselComponent } from '../../shared/carousel/carousel.component';
   standalone: true,
   imports: [
     CommonModule,
-    NavbarComponent,
-    FooterComponent,
     CarouselComponent,
     RouterLink
   ],

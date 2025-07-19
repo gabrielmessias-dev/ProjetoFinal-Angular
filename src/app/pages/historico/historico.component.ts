@@ -5,9 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs'; 
 import { tap, catchError, takeUntil } from 'rxjs/operators';
-
-import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
 import { ExamService, Exame } from '../../core/exam.service';
 import { AuthService } from '../../core/auth.service';
 
@@ -19,8 +16,6 @@ declare var bootstrap: any;
   imports: [
     CommonModule,
     FormsModule,
-    NavbarComponent,
-    FooterComponent,
     RouterLink,
     DatePipe
   ],
