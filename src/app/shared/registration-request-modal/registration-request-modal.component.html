@@ -1,0 +1,61 @@
+<div class="modal fade" id="registrationRequestModal" tabindex="-1" aria-labelledby="registrationRequestModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registrationRequestModalLabel">Solicitação de Acesso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetForm()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!submissionSuccess">
+          <p>Preencha o formulário abaixo para solicitar seu acesso. Anexe seu pedido médico e documento de identificação. Analisaremos e retornaremos por e-mail.</p>
+          <hr>
+          <form (ngSubmit)="submitRequest()">
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Nome Completo:</label>
+              <input type="text" class="form-control" id="fullName" [(ngModel)]="requestData.fullName" name="fullName" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email:</label>
+              <input type="email" class="form-control" id="email" [(ngModel)]="requestData.email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="medicalRequest" class="form-label">Anexar Pedido Médico:</label>
+              <input type="file" class="form-control" id="medicalRequest" name="medicalRequest" (change)="onFileSelected($event, 'medicalRequest')">
+              <div class="form-text">Formatos: PDF, JPG, PNG.</div>
+            </div>
+            <div class="mb-3">
+              <label for="idDocument" class="form-label">Anexar Documento de Identificação (RG/CNH):</label>
+              <input type="file" class="form-control" id="idDocument" name="idDocument" (change)="onFileSelected($event, 'idDocument')">
+              <div class="form-text">Frente e verso em um só arquivo ou múltiplos arquivos (PDF, JPG, PNG).</div>
+            </div>
+            <div class="mb-3">
+              <label for="justification" class="form-label">Justificativa da Solicitação:</label>
+              <textarea class="form-control" id="justification" rows="3" [(ngModel)]="requestData.justification" name="justification" required></textarea>
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="lgpdConsent" [(ngModel)]="lgpdConsent" name="lgpdConsent" required>
+              <label class="form-check-label" for="lgpdConsent">
+                Declaro estar ciente de que meus dados serão utilizados para fins de cadastro e atendimento, em conformidade com a Lei Geral de Proteção de Dados (LGPD).
+              </label>
+            </div>
+
+            <div *ngIf="formError" class="alert alert-danger">Por favor, preencha todos os campos obrigatórios e aceite os termos da LGPD.</div>
+
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetForm()">Fechar</button>
+              <button type="submit" class="btn btn-primary" [disabled]="!lgpdConsent">Enviar Solicitação</button>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="submissionSuccess" class="alert alert-success text-center mt-3">
+          Sua solicitação de acesso foi enviada! Em até 2 dias úteis, você receberá um retorno por e-mail com a confirmação do login e senha.
+          <div class="mt-3">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="resetForm()">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

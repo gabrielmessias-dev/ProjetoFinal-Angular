@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <main class="login-container d-flex align-items-center justify-content-center py-5">
   <div class="container">
     <div class="row justify-content-center">
@@ -9,9 +11,14 @@
 
             <form (ngSubmit)="login()" #loginForm="ngForm">
               <div class="mb-3">
-                <label for="email" class="form-label">Email:</label> <input
-                  type="email" class="form-control"
-                  id="email" name="email" [(ngModel)]="email" required
+                <label for="email" class="form-label">Email:</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="email"
+                  required
                   email
                   #emailField="ngModel"
                   [class.is-invalid]="emailField.invalid && emailField.touched"
@@ -52,10 +59,13 @@
               <p class="text-center mt-3 text-muted" style="font-size: 0.85rem;">
                 Ao clicar em "Entrar", você concorda com o uso de seus dados para fins de acesso e gestão em nossa plataforma, conforme nossa Política de Privacidade.
               </p>
-              <p class="text-center mt-2 text-muted" style="font-size: 0.85rem;">
-                Não possui cadastro? Por favor, entre em contato com nossa central de atendimento para criar seu acesso.
+              <p class="text-center mt-2" style="font-size: 0.9rem;">
+                Não possui cadastro?
+                <button type="button" class="btn btn-link p-0 align-baseline" (click)="openRegistrationModal()">
+                  Solicitar Acesso
+                </button>
               </p>
-            </form>
+              </form>
           </div>
         </div>
       </div>
