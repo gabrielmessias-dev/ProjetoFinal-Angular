@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { AuthService } from '../../core/auth.service';
+import { PoliticaModalComponent } from '../../shared/politica-modal/politica-modal.component';
 
 declare var bootstrap: any; // <<<< CONFIRME SE ESTA LINHA ESTÁ PRESENTE!
 
@@ -17,7 +18,8 @@ declare var bootstrap: any; // <<<< CONFIRME SE ESTA LINHA ESTÁ PRESENTE!
   imports: [
     CommonModule,
     FormsModule,
-    NavbarComponent
+    NavbarComponent,
+    PoliticaModalComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit {
   password = '';
   errorMessage: string | null = null;
   authRequired = false;
+  mostrarModal = false;
 
   constructor(
     private authService: AuthService,
@@ -65,6 +68,10 @@ export class LoginComponent implements OnInit {
         this.errorMessage = 'Ocorreu um erro inesperado ao tentar fazer login. Tente novamente.';
       }
     );
+  }
+
+  abrirModal(): void {
+    this.mostrarModal = true;
   }
 
   // <<<< NOVO MÉTODO PARA ABRIR O MODAL DE CADASTRO >>>>

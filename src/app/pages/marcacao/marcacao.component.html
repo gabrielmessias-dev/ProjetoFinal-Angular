@@ -56,6 +56,17 @@
                 </select>
               </div>
 
+              <div class="mb-3">
+                <label for="medicalRequisitionFile" class="form-label">Anexar Pedido Médico:</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="medicalRequisitionFile"
+                  name="medicalRequisitionFile"
+                  (change)="onFileSelected($event)"
+                  required >
+                <div class="form-text">Formatos aceitos: PDF, JPG, PNG.</div>
+              </div>
               <div class="d-grid gap-2 mt-4">
                 <button type="submit" class="btn btn-primary btn-lg">Agendar Exame</button>
               </div>
@@ -72,10 +83,14 @@
               <div *ngIf="horarioInvalidoErro" class="alert alert-danger mt-4 text-center">
                 Horário de agendamento fora do expediente comercial (9:00h às 21:00h).
               </div>
+              <div *ngIf="arquivoObrigatorioErro" class="alert alert-danger mt-4 text-center">
+                Por favor, anexe o pedido médico.
+              </div>
 
               <p class="text-center mt-3 text-muted" style="font-size: 0.85rem;">
-                Ao agendar, você consente com o tratamento de seus dados para fins de registro do exame, conforme nossa Política de Privacidade e a LGPD.
+                Ao agendar, você consente com o tratamento de seus dados para fins de registro do exame, conforme nossa <span class="text-primary" style="cursor: pointer;" (click)="abrirModal()">Política de Privacidade e LGPD</span>.
               </p>
+              <app-politica-modal [isVisible]="mostrarModal"></app-politica-modal>
             </form>
           </div>
         </div>

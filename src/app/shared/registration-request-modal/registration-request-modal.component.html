@@ -19,11 +19,6 @@
               <input type="email" class="form-control" id="email" [(ngModel)]="requestData.email" name="email" required>
             </div>
             <div class="mb-3">
-              <label for="medicalRequest" class="form-label">Anexar Pedido Médico:</label>
-              <input type="file" class="form-control" id="medicalRequest" name="medicalRequest" (change)="onFileSelected($event, 'medicalRequest')">
-              <div class="form-text">Formatos: PDF, JPG, PNG.</div>
-            </div>
-            <div class="mb-3">
               <label for="idDocument" class="form-label">Anexar Documento de Identificação (RG/CNH):</label>
               <input type="file" class="form-control" id="idDocument" name="idDocument" (change)="onFileSelected($event, 'idDocument')">
               <div class="form-text">Frente e verso em um só arquivo ou múltiplos arquivos (PDF, JPG, PNG).</div>
@@ -36,8 +31,9 @@
             <div class="form-check mb-3">
               <input class="form-check-input" type="checkbox" id="lgpdConsent" [(ngModel)]="lgpdConsent" name="lgpdConsent" required>
               <label class="form-check-label" for="lgpdConsent">
-                Declaro estar ciente de que meus dados serão utilizados para fins de cadastro e atendimento, em conformidade com a Lei Geral de Proteção de Dados (LGPD).
+                Declaro estar ciente de que meus dados serão utilizados para fins de cadastro e atendimento, em conformidade com a <span class="text-primary" style="cursor: pointer;" (click)="abrirModal()">Lei Geral de Proteção de Dados (LGPD)</span>.
               </label>
+              <app-politica-modal [isVisible]="mostrarModal"></app-politica-modal>
             </div>
 
             <div *ngIf="formError" class="alert alert-danger">Por favor, preencha todos os campos obrigatórios e aceite os termos da LGPD.</div>

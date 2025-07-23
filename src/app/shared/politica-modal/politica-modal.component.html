@@ -1,0 +1,15 @@
+<div *ngIf="isVisible" class="modal-backdrop">
+  <div class="modal-container">
+    <h5>Política de Privacidade e LGPD</h5>
+    <p>
+      Os dados fornecidos pelos usuários serão utilizados exclusivamente para a marcação e gestão de exames, respeitando os princípios da Lei Geral de Proteção de Dados (LGPD). Garantimos a confidencialidade e segurança das informações pessoais.
+    </p>
+    <p>
+      Para mais informações, acesse:
+      <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank">
+        Lei Geral de Proteção de Dados - Lei nº 13.709
+      </a>
+    </p>
+    <button type="button" class="btn btn-secondary btn-sm mt-3" (click)="fecharModal()">Fechar</button>
+  </div>
+</div>

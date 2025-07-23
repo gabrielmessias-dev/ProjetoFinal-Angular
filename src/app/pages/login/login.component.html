@@ -56,9 +56,12 @@
                 <button type="submit" class="btn btn-primary btn-lg" [disabled]="loginForm.invalid">Entrar</button>
               </div>
 
-              <p class="text-center mt-3 text-muted" style="font-size: 0.85rem;">
-                Ao clicar em "Entrar", você concorda com o uso de seus dados para fins de acesso e gestão em nossa plataforma, conforme nossa Política de Privacidade.
+              <p class="text-muted small mt-2">
+                 Ao clicar em "Entrar", você concorda com o uso de seus dados conforme nossa
+              <span class="text-primary" style="cursor: pointer;" (click)="abrirModal()">Política de Privacidade</span>.
               </p>
+
+              <app-politica-modal [isVisible]="mostrarModal"></app-politica-modal>
               <p class="text-center mt-2" style="font-size: 0.9rem;">
                 Não possui cadastro?
                 <button type="button" class="btn btn-link p-0 align-baseline" (click)="openRegistrationModal()">

@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PoliticaModalComponent } from "../politica-modal/politica-modal.component";
 
 declare var bootstrap: any; // <<<< ADICIONADO AQUI! ESSENCIAL PARA RECONHECER 'bootstrap'
 
@@ -10,8 +11,9 @@ declare var bootstrap: any; // <<<< ADICIONADO AQUI! ESSENCIAL PARA RECONHECER '
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
-  ],
+    FormsModule,
+    PoliticaModalComponent
+],
   templateUrl: './registration-request-modal.component.html',
   styleUrl: './registration-request-modal.component.css'
 })
@@ -27,6 +29,7 @@ export class RegistrationRequestModalComponent {
   lgpdConsent: boolean = false;
   submissionSuccess: boolean = false;
   formError: boolean = false;
+  mostrarModal: boolean = false;
 
   constructor() {}
 
@@ -80,10 +83,16 @@ export class RegistrationRequestModalComponent {
     this.submissionSuccess = false;
     this.formError = false;
 
+    
+
     const modalElement = document.getElementById('registrationRequestModal');
     if (modalElement) {
         const modal = bootstrap.Modal.getInstance(modalElement);
         if(modal) modal.hide();
     }
+  }
+
+   abrirModal() {
+    this.mostrarModal = true;
   }
 }

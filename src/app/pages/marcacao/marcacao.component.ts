@@ -3,21 +3,24 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { AuthService } from '../../core/auth.service';
 import { ExamService, Exame } from '../../core/exam.service';
+import { PoliticaModalComponent } from "../../shared/politica-modal/politica-modal.component";
 
 @Component({
   selector: 'app-marcacao',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
-  ],
+    FormsModule,
+    PoliticaModalComponent
+],
   templateUrl: './marcacao.component.html',
   styleUrl: './marcacao.component.css'
 })
 export class MarcacaoComponent implements OnInit {
-  novoExame: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink'> = { 
+  novoExame: Omit<Exame, 'id' | 'patientId' | 'status' | 'resultLink' | 'firestoreId'> = {
     examType: '',
     date: '',
     time: ''
@@ -27,9 +30,14 @@ export class MarcacaoComponent implements OnInit {
   agendamentoErro = false;
   dataPassadaErro = false;
   horarioInvalidoErro = false;
+  arquivoObrigatorioErro = false; // <<<< ADICIONADO AQUI: Para a mensagem de erro do arquivo
+  mostrarModal: boolean = false;
 
   minDate: string;
   availableTimes: string[] = [];
+
+  selectedMedicalFile: File | null = null; // <<<< ADICIONADO AQUI: Para armazenar o arquivo selecionado
+  // pedidoMedicoInput: any; // REMOVIDO: Não precisamos de [(ngModel)] em input type="file" diretamente
 
   constructor(
     private authService: AuthService,
@@ -50,6 +58,10 @@ export class MarcacaoComponent implements OnInit {
     this.generateAvailableTimes();
   }
 
+  abrirModal() {
+    this.mostrarModal = true;
+  }
+
   private generateAvailableTimes(): void {
     const startHour = 9;
     const endHour = 20;
@@ -61,17 +73,38 @@ export class MarcacaoComponent implements OnInit {
     }
   }
 
+  // <<<< NOVO MÉTODO PARA LER O ARQUIVO SELECIONADO >>>>
+  onFileSelected(event: Event): void {
+    const element = event.currentTarget as HTMLInputElement;
+    const fileList: FileList | null = element.files;
+    if (fileList && fileList.length > 0) {
+      this.selectedMedicalFile = fileList[0]; // Captura o objeto File
+      this.arquivoObrigatorioErro = false; // Limpa o erro se um arquivo foi selecionado
+    } else {
+      this.selectedMedicalFile = null;
+    }
+  }
+
   agendarExame(): void {
     this.agendamentoSucesso = false;
     this.agendamentoErro = false;
     this.dataPassadaErro = false;
     this.horarioInvalidoErro = false;
+    this.arquivoObrigatorioErro = false; // <<<< Reseta o erro do arquivo
 
-    // Validação básica do formulário
+    // Validação de campos obrigatórios (texto e selects)
     if (!this.novoExame.examType || !this.novoExame.date || !this.novoExame.time) {
       this.agendamentoErro = true;
       return;
     }
+
+    // <<<< NOVA VALIDAÇÃO: Arquivo de requisição médica >>>
+    if (!this.selectedMedicalFile) { // Verifica se o arquivo foi selecionado
+      this.arquivoObrigatorioErro = true;
+      return;
+    }
+
+    // ... (restante das validações de data e hora) ...
 
     const selectedDateTime = new Date(`${this.novoExame.date}T${this.novoExame.time}`);
     const now = new Date();
@@ -81,27 +114,32 @@ export class MarcacaoComponent implements OnInit {
       return;
     }
 
-    const [hours, minutes] = this.novoExame.time.split(':').map(Number);
-
+    const [hours] = this.novoExame.time.split(':').map(Number);
     if (hours < 9 || hours >= 21) {
       this.horarioInvalidoErro = true;
       return;
     }
 
-    this.examService.createExam(this.novoExame).subscribe({ 
+    // O service.createExam(this.novoExame) já está configurado para não usar o arquivo em si.
+    // O arquivo é apenas para validação visual/UX neste momento do TCC.
+    this.examService.createExam(this.novoExame).subscribe({
       next: (exam) => {
-        this.agendamentoSucesso = true;
-
-        this.novoExame = {
-          examType: '',
-          date: '',
-          time: ''
-        };
-        
-        this.router.navigate(['/historico']);
+        if (exam) {
+          this.agendamentoSucesso = true;
+          this.novoExame = {
+            examType: '',
+            date: '',
+            time: ''
+          };
+          this.selectedMedicalFile = null; // Limpa o arquivo selecionado após agendar
+          this.router.navigate(['/historico']);
+        } else {
+            this.agendamentoErro = true;
+            console.error('Erro no agendamento: service retornou null.');
+        }
       },
       error: (err) => {
-        console.error('Erro ao agendar exame:', err);
+        console.error('Erro na subscrição do agendamento:', err);
         this.agendamentoErro = true;
       }
     });
