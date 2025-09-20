@@ -101,16 +101,19 @@ Utilizando **NgIf**, o projeto possui três variações de **Navbar**:
 ![Home](prints/home.png)
 
 ### Formulário de Solicitação de Cadastro
-![Formulário de Cadastro](prints/form-cadastro.png)
+![Formulário de Cadastro](prints/cadastro.png)
 
 ### Área do Paciente
-![Área do Paciente](prints/area-paciente.png)
+![Área do Paciente](prints/perfil.png)
 
 ### Agendamento de Exames
 ![Agendamento](prints/agendamento.png)
 
 ### Histórico de Exames
 ![Histórico](prints/historico.png)
+
+### Tela de Login
+![Login](prints/login.png)
 
 ---
 
