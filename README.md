@@ -1,59 +1,126 @@
-# DiagnoTecX
+# Sistema de Agendamento de Exames - Projeto Final Ford Enter
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.6.
+Este é o projeto final do curso **Ford Enter**, desenvolvido como um sistema de agendamento de exames médicos utilizando **Angular** e **Firebase**.  
+O sistema foi projetado com foco em **Front-End**, mas algumas integrações básicas com banco de dados e autenticação foram implementadas.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Deploy do Projeto
+O sistema está hospedado no **Firebase Hosting** e pode ser acessado através do link:  
+👉 [Acessar Sistema](https://projeto-final-ford-enter.web.app/)
 
-```bash
-ng serve
+---
+
+## 📂 Estrutura de Pastas
+Abaixo está a organização principal do projeto (Angular):
+
+```
+src/app
+ ├── core
+ │    ├── auth.service.ts
+ │    ├── exam.service.ts
+ │    └── login.guard.ts
+ │
+ ├── pages
+ │    ├── area-do-paciente
+ │    ├── historico
+ │    ├── home
+ │    ├── info
+ │    ├── login
+ │    ├── marcacao
+ │    ├── mitos
+ │    └── preparo
+ │
+ ├── shared
+ │    ├── carousel
+ │    ├── footer
+ │    ├── navbar
+ │    ├── politica-modal
+ │    └── registration-request-modal
+ │
+ ├── app.component.css
+ ├── app.component.html
+ ├── app.component.ts
+ └── app.config.ts
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🛠️ Tecnologias Utilizadas
+- **Angular** (framework principal)
+- **Firebase** (hospedagem, autenticação e banco de dados)
+- **Bootstrap** (estilização e responsividade)
+- **HTML5 / CSS3 / TypeScript**
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🔐 Login de Teste
+Para acessar a área de paciente, utilize as seguintes credenciais já cadastradas no **Firebase Authentication**:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- **E-mail:** `paciente@teste.com.br`  
+- **Senha:** `123456`  
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## 📋 Funcionalidades
 
-To build the project run:
+### Público (sem login)
+- Página inicial com **carrossel de imagens**.
+- Páginas de informações: Home, Info, Preparo e Mitos.
+- Footer com **copyright** e links para redes sociais.
+- **Formulário de solicitação de cadastro** (não funcional, apenas visual).
 
-```bash
-ng build
-```
+### Login e Autenticação
+- Autenticação integrada ao **Firebase**.
+- Redirecionamento para a área protegida após login.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Área do Paciente (com login)
+- Visualização de dados do paciente.
+- **Agendamento de exames**:
+  - Escolha de data e hora.
+  - Seleção do tipo de exame.
+  - Upload do pedido médico.
+  - Registro do exame no **Firebase Database** (CRUD).
 
-## Running unit tests
+- **Histórico de exames**:
+  - Exames confirmados, agendados, cancelados e concluídos.
+  - Possibilidade de baixar resultado (apenas visual, não funcional).
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Menus Dinâmicos
+Utilizando **NgIf**, o projeto possui três variações de **Navbar**:
+1. Visitante (não logado, na página inicial).
+2. Usuário logado (área protegida de marcação e histórico).
+3. Usuário logado acessando páginas públicas (com opção de voltar à área do paciente).
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 📸 Imagens do Sistema
 
-For end-to-end (e2e) testing, run:
+### Página Inicial
+![Home](prints/home.png)
 
-```bash
-ng e2e
-```
+### Formulário de Solicitação de Cadastro
+![Formulário de Cadastro](prints/form-cadastro.png)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Área do Paciente
+![Área do Paciente](prints/area-paciente.png)
 
-## Additional Resources
+### Agendamento de Exames
+![Agendamento](prints/agendamento.png)
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Histórico de Exames
+![Histórico](prints/historico.png)
+
+---
+
+## 📌 Observações
+- Algumas partes do sistema são **apenas visuais**, sem integração completa com o Firebase (ex: envio de solicitação de cadastro, download de PDF de resultado).  
+- O foco do projeto foi o **Front-End em Angular**, conforme exigência do curso.  
+- O sistema foi desenvolvido como **projeto TCC** do programa Ford Enter.
+
+---
+
+## 👨‍💻 Autor
+Projeto desenvolvido por **Gabriel Messias**  
+👉 [LinkedIn](https://www.linkedin.com/in/gabrielmessias-dev)  
+👉 [GitHub](https://github.com/gabrielmessias-dev)
