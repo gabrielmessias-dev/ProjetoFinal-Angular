@@ -42,6 +42,7 @@ src/app
  ├── app.component.html
  ├── app.component.ts
  └── app.config.ts
+ └── ...
 ```
 
 ---
